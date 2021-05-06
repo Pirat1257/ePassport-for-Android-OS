@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class reader_connect extends AppCompatActivity {
+public class Reader_connect extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

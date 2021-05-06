@@ -2,4 +2,5 @@
     <string name="app_name">ePassport</string>
     <string name="enter_password">Enter Password</string>
     <string name="confirm">Confirm</string>
+    <string name="enter_reader_s_ip">Enter Reader\'s ip</string>
 </resources>
