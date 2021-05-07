@@ -17,3 +17,6 @@
 - https://www.javaer101.com/en/article/2650249.html;
 - http://developer.alexanderklimov.ru/android/theory/asynctask.php;
 - https://metanit.com/java/tutorial/6.1.php;
+- https://www.youtube.com/watch?v=X7T0g5kBYJk;
+- https://www.youtube.com/watch?v=LWFSGs4CG6I;
+- 
