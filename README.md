@@ -10,3 +10,4 @@
 
 Полезные ссылки:
 - https://www.javaer101.com/en/article/2650249.html;
+- http://developer.alexanderklimov.ru/android/theory/asynctask.php;
