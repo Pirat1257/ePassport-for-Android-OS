@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     // Добавляем в базу проверочный элемент
                     passTableDao.insert(finalPt_head);
                     // Вызываем новое активити
-                    Intent intent = new Intent(MainActivity.this, Reader_connect.class);
+                    Intent intent = new Intent(MainActivity.this, ReaderConnectActivity.class);
                     intent.putExtra("pass", passEditText.getText().toString());
                     startActivity(intent);
                     finish();
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     // Проверка хешей
                     if(dummy_hash.equals(passHash)) {
                         // Вызываем новое активити
-                        Intent intent = new Intent(MainActivity.this, Reader_connect.class);
+                        Intent intent = new Intent(MainActivity.this, ReaderConnectActivity.class);
                         intent.putExtra("pass", passEditText.getText().toString());
                         startActivity(intent);
                         finish();
