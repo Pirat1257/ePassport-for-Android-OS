@@ -16,4 +16,5 @@
     <string name="date_of_issue">Date of issue</string>
     <string name="authority">Authority</string>
     <string name="date_of_expiry">Date of expiry</string>
+    <string name="faceshot">Faceshot</string>
 </resources>
