@@ -19,10 +19,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 /*--------------------Класс для шифрования и дешифрования данных--------------------*/
 /*--------------------Шифрование--------------------*/
-public class Crypto {
+public class MyCrypto {
     public Key publicKey = null;
     private Key privateKey = null;
-    
+
     /*--------------------Генерация пары--------------------*/
     public String generate_keys() {
         try {

@@ -15,11 +15,11 @@ public interface PassTableDao {
     PassTable selectById(int id);
 
     @Insert
-    void insert(PassTable someInfo);
+    void insert(PassTable passTable);
 
     @Update
-    void update(PassTable someInfo);
+    void update(PassTable passTable);
 
     @Delete
-    void delete(PassTable someInfo);
+    void delete(PassTable passTable);
 }
