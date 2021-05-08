@@ -8,4 +8,14 @@
 - Вся информация хранится в базе данных SQlite в зашифрованном виде;
 - Приложение запрашивает пароль, при помощи которого производтся шифрование и расшифрование информации, хранимой в базе данных.
 
+Сетевое взаимодействие при проверке соединения:
+1) (Phone <-x-> PC) - При указаниии корректного ip в приложении производится соединение
+2) (Phone --(b"HelloWorld!")-> PC) - Запрос к ПС от приложения
+3) (Phone <-(b"ok")-- PC) - Ответ от ПС к приложению
+
 Полезные ссылки:
+- https://www.javaer101.com/en/article/2650249.html;
+- http://developer.alexanderklimov.ru/android/theory/asynctask.php;
+- https://metanit.com/java/tutorial/6.1.php;
+- https://www.youtube.com/watch?v=X7T0g5kBYJk;
+- https://www.youtube.com/watch?v=LWFSGs4CG6I;
