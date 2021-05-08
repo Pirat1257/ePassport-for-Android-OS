@@ -3,6 +3,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.sql.Blob;
+
 // Details recorder in MRZ (Машино читаемой зоне)
 @Entity
 public class DG1Table {

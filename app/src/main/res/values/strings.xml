@@ -3,4 +3,17 @@
     <string name="enter_password">Enter Password</string>
     <string name="confirm">Confirm</string>
     <string name="enter_reader_s_ip">Enter Reader\'s IP</string>
+    <string name="change_pass">change pass</string>
+    <string name="download">download</string>
+    <string name="type">Type</string>
+    <string name="minus">-</string>
+    <string name="code_of_issuing_state">Code of issuing State</string>
+    <string name="passport_no">Passport No.</string>
+    <string name="surname">Surname</string>
+    <string name="nationality">Nationality</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="sex">Sex</string>
+    <string name="date_of_issue">Date of issue</string>
+    <string name="authority">Authority</string>
+    <string name="date_of_expiry">Date of expiry</string>
 </resources>
