@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EPassport">
-        <activity android:name=".MenuActivity"></activity>
+        <activity android:name=".ChangePassActivity"></activity>
+        <activity android:name=".MenuActivity" />
         <activity android:name=".ReaderConnectActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

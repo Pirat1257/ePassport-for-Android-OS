@@ -84,7 +84,7 @@ public class ReaderConnectActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "Nothing";
+            return "No one answered";
         }
 
         @Override

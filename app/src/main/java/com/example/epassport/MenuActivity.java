@@ -2,6 +2,7 @@ package com.example.epassport;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
@@ -70,29 +71,17 @@ public class MenuActivity extends AppCompatActivity {
         DG1Table dg1_head = dg1TableDao.selectById(0);
         if (dg1_head != null) {
             try {
-                type.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentType.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                state.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                passNo.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentNumber.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                surname.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.surname.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                names.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.name.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                nation.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.nationality.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                birth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfBirth.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                sex.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.sex.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                issue.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                auth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.authority.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-                expiry.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"),
-                        Base64.DEFAULT)));
-
+                type.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentType.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                state.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                passNo.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentNumber.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                surname.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.surname.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                names.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.name.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                nation.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.nationality.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                birth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfBirth.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                sex.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.sex.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                issue.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                auth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.authority.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                expiry.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"), Base64.DEFAULT)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -103,37 +92,36 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // Пока затычка
+                // Пока затычка, вообще тут должен производится вызов асинхронной таски с работой
                 DG1Table new_dg1 = new DG1Table();
                 new_dg1.id = 0;
                 dg1TableDao.delete(new_dg1);
                 try {
-                    new_dg1.documentType = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some documentType".getBytes("UTF-16LE"));
-                    new_dg1.issuingState = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some issuingState".getBytes("UTF-16LE"));
-                    new_dg1.documentNumber = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some documentNumber".getBytes("UTF-16LE"));
-                    new_dg1.surname = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some surname".getBytes("UTF-16LE"));
-                    new_dg1.name = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some name".getBytes("UTF-16LE"));
-                    new_dg1.nationality = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some nationality".getBytes("UTF-16LE"));
-                    new_dg1.dateOfBirth = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some dateOfBirth".getBytes("UTF-16LE"));
-                    new_dg1.sex = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some sex".getBytes("UTF-16LE"));
-                    new_dg1.dateOfIssue = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some Issue".getBytes("UTF-16LE"));
-                    new_dg1.authority = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some authority".getBytes("UTF-16LE"));
-                    new_dg1.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass.getBytes("UTF-16LE"),
-                            "some dataOfExpiryOrValidUntilDate".getBytes("UTF-16LE"));
+                    new_dg1.documentType = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some documentType".getBytes("UTF-16LE"));
+                    new_dg1.issuingState = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some issuingState".getBytes("UTF-16LE"));
+                    new_dg1.documentNumber = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some documentNumber".getBytes("UTF-16LE"));
+                    new_dg1.surname = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some surname".getBytes("UTF-16LE"));
+                    new_dg1.name = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some name".getBytes("UTF-16LE"));
+                    new_dg1.nationality = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some nationality".getBytes("UTF-16LE"));
+                    new_dg1.dateOfBirth = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some dateOfBirth".getBytes("UTF-16LE"));
+                    new_dg1.sex = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some sex".getBytes("UTF-16LE"));
+                    new_dg1.dateOfIssue = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some Issue".getBytes("UTF-16LE"));
+                    new_dg1.authority = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some authority".getBytes("UTF-16LE"));
+                    new_dg1.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some dataOfExpiry".getBytes("UTF-16LE"));
                     dg1TableDao.insert(new_dg1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        // Обработка нажатия на кнопку CHANGE PASSWORD
+        chPassButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MenuActivity.this, ChangePassActivity.class);
+                intent.putExtra("pass", pass);
+                startActivity(intent);
             }
         });
     }
