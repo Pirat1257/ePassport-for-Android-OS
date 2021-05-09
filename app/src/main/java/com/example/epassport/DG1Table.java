@@ -1,9 +1,8 @@
 package com.example.epassport;
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.sql.Blob;
 
 // Details recorder in MRZ (Машино читаемой зоне)
 @Entity
@@ -11,6 +10,7 @@ public class DG1Table {
     @PrimaryKey
     @NonNull
     int id;
+    // Document Details
     String documentType;
     String issuingState;
     String surname;
@@ -26,4 +26,7 @@ public class DG1Table {
     String dateOfExpiryOrValidUntilDate;
     String checkDigit_DOE_VUD;
     String CompositeCheckDigit;
+    // Encoded Headshot
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    byte[] headshot;
 }

@@ -3,13 +3,20 @@ package com.example.epassport;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
@@ -68,6 +75,24 @@ public class MenuActivity extends AppCompatActivity {
         myCrypto = new MyCrypto();
         sessionKey = null;
         // Если базы данных не пустые, производим вывод информации
+
+        /*
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(Environment.getExternalStorageDirectory().
+                    getAbsoluteFile() + "/Download/" + "hui.jpg");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        Bitmap img = BitmapFactory.decodeStream(bis);
+
+        byte[] as = getBytes(img);
+        img = getImage(as);
+
+        faceshot.setImageBitmap(img);
+    */
+
         DG1Table dg1_head = dg1TableDao.selectById(0);
         if (dg1_head != null) {
             try {
@@ -82,6 +107,11 @@ public class MenuActivity extends AppCompatActivity {
                 issue.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"), Base64.DEFAULT)));
                 auth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.authority.getBytes("UTF-16LE"), Base64.DEFAULT)));
                 expiry.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"), Base64.DEFAULT)));
+
+                byte[] face = myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"), Base64.DEFAULT)).getBytes();
+                Bitmap img = getImage(face);
+                faceshot.setImageBitmap(img); // Тут вылетает
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,6 +138,23 @@ public class MenuActivity extends AppCompatActivity {
                     new_dg1.dateOfIssue = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some Issue".getBytes("UTF-16LE"));
                     new_dg1.authority = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some authority".getBytes("UTF-16LE"));
                     new_dg1.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some dataOfExpiry".getBytes("UTF-16LE"));
+
+                    // Добавление фото
+                    FileInputStream fis = null;
+                    try {
+                        fis = new FileInputStream(Environment.getExternalStorageDirectory().
+                                getAbsoluteFile() + "/Download/" + "hui.jpg");
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    BufferedInputStream bis = new BufferedInputStream(fis);
+                    Bitmap img = BitmapFactory.decodeStream(bis);
+
+                    // Вот мне типа пришла битовая карта в байтах
+                    byte[] face = getBytes(img);
+                    new_dg1.headshot = myCrypto.encrypt(pass.getBytes("UTF-16LE"), getBytes(img)).getBytes();
+
+
                     dg1TableDao.insert(new_dg1);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -122,7 +169,20 @@ public class MenuActivity extends AppCompatActivity {
                 Intent intent = new Intent(MenuActivity.this, ChangePassActivity.class);
                 intent.putExtra("pass", pass);
                 startActivity(intent);
+
             }
         });
+    }
+
+    // convert from bitmap to byte array
+    public byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // convert from byte array to bitmap
+    public Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }
