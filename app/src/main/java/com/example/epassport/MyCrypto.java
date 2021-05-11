@@ -95,10 +95,10 @@ public class MyCrypto {
     }
 
     /*--------------------Шифрование с помощью сеансового ключа--------------------*/
-    public static String encrypt(byte[] key, byte[] clear) throws Exception
+    public static String encrypt(String key, byte[] clear) throws Exception
     {
         MessageDigest md = MessageDigest.getInstance("md5"); // md5 - 128-битный алгоритм хеширования, один из серии алгоритмов по построению дайджеста сообщения
-        byte[] digestOfPassword = md.digest(key); // Для массива создается дайджест сообщения MessageDigest.
+        byte[] digestOfPassword = md.digest(key.getBytes("UTF-16LE")); // Для массива создается дайджест сообщения MessageDigest.
         // Экземпляр секретного ключа SecretKeySpec создается для алгоритма "AES"
         SecretKeySpec skeySpec = new SecretKeySpec(digestOfPassword, "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding");
@@ -118,5 +118,34 @@ public class MyCrypto {
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         byte[] decrypted = cipher.doFinal(encrypted);
         return new String(decrypted, "UTF-16LE");
+    }
+
+    /*----Вторая версия шифрования (подходит для картинок)----*/
+    public static byte[] encrypt2(String key, byte[] clear) throws Exception
+    {
+        MessageDigest md = MessageDigest.getInstance("md5");
+        byte[] digestOfPassword = md.digest(key.getBytes("UTF-16LE"));
+
+        SecretKeySpec skeySpec = new SecretKeySpec(digestOfPassword, "AES");
+
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        byte[] encodedText = cipher.doFinal(clear);
+
+        return encodedText;
+    }
+
+    /*----Вторая версия расшифрования (подходит для картинок)----*/
+    public static byte[] decrypt2(String key, byte[] encrypted) throws Exception
+    {
+        MessageDigest md = MessageDigest.getInstance("md5");
+        byte[] digestOfPassword = md.digest(key.getBytes("UTF-16LE"));
+
+        SecretKeySpec skeySpec = new SecretKeySpec(digestOfPassword, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] decodedText = cipher.doFinal(encrypted);
+
+        return decodedText;
     }
 }

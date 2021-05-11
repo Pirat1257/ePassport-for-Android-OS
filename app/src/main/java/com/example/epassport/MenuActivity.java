@@ -1,22 +1,32 @@
 package com.example.epassport;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
@@ -45,6 +55,7 @@ public class MenuActivity extends AppCompatActivity {
     private MyCrypto myCrypto;
     private String sessionKey;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,24 +86,6 @@ public class MenuActivity extends AppCompatActivity {
         myCrypto = new MyCrypto();
         sessionKey = null;
         // Если базы данных не пустые, производим вывод информации
-
-        /*
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(Environment.getExternalStorageDirectory().
-                    getAbsoluteFile() + "/Download/" + "hui.jpg");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        Bitmap img = BitmapFactory.decodeStream(bis);
-
-        byte[] as = getBytes(img);
-        img = getImage(as);
-
-        faceshot.setImageBitmap(img);
-    */
-
         DG1Table dg1_head = dg1TableDao.selectById(0);
         if (dg1_head != null) {
             try {
@@ -107,10 +100,17 @@ public class MenuActivity extends AppCompatActivity {
                 issue.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"), Base64.DEFAULT)));
                 auth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.authority.getBytes("UTF-16LE"), Base64.DEFAULT)));
                 expiry.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"), Base64.DEFAULT)));
-
-                byte[] face = myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"), Base64.DEFAULT)).getBytes();
-                Bitmap img = getImage(face);
-                faceshot.setImageBitmap(img); // Тут вылетает
+                // Вывод фото
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(getApplicationInfo().dataDir + "/pictures/" + "/faceshot.jpg/");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Path path = Paths.get(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/Download/" + "faceshot.jpg");
+                byte[] face = Files.readAllBytes(path);
+                Bitmap img = getImage(myCrypto.decrypt2(pass, face));
+                faceshot.setImageBitmap(img);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -127,19 +127,20 @@ public class MenuActivity extends AppCompatActivity {
                 new_dg1.id = 0;
                 dg1TableDao.delete(new_dg1);
                 try {
-                    new_dg1.documentType = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some documentType".getBytes("UTF-16LE"));
-                    new_dg1.issuingState = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some issuingState".getBytes("UTF-16LE"));
-                    new_dg1.documentNumber = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some documentNumber".getBytes("UTF-16LE"));
-                    new_dg1.surname = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some surname".getBytes("UTF-16LE"));
-                    new_dg1.name = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some name".getBytes("UTF-16LE"));
-                    new_dg1.nationality = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some nationality".getBytes("UTF-16LE"));
-                    new_dg1.dateOfBirth = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some dateOfBirth".getBytes("UTF-16LE"));
-                    new_dg1.sex = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some sex".getBytes("UTF-16LE"));
-                    new_dg1.dateOfIssue = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some Issue".getBytes("UTF-16LE"));
-                    new_dg1.authority = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some authority".getBytes("UTF-16LE"));
-                    new_dg1.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass.getBytes("UTF-16LE"), "some dataOfExpiry".getBytes("UTF-16LE"));
+                    new_dg1.id = 0;
+                    new_dg1.documentType = myCrypto.encrypt(pass, "some documentType".getBytes("UTF-16LE"));
+                    new_dg1.issuingState = myCrypto.encrypt(pass, "some issuingState".getBytes("UTF-16LE"));
+                    new_dg1.documentNumber = myCrypto.encrypt(pass, "some documentNumber".getBytes("UTF-16LE"));
+                    new_dg1.surname = myCrypto.encrypt(pass, "some surname".getBytes("UTF-16LE"));
+                    new_dg1.name = myCrypto.encrypt(pass, "some name".getBytes("UTF-16LE"));
+                    new_dg1.nationality = myCrypto.encrypt(pass, "some nationality".getBytes("UTF-16LE"));
+                    new_dg1.dateOfBirth = myCrypto.encrypt(pass, "some dateOfBirth".getBytes("UTF-16LE"));
+                    new_dg1.sex = myCrypto.encrypt(pass, "some sex".getBytes("UTF-16LE"));
+                    new_dg1.dateOfIssue = myCrypto.encrypt(pass, "some Issue".getBytes("UTF-16LE"));
+                    new_dg1.authority = myCrypto.encrypt(pass, "some authority".getBytes("UTF-16LE"));
+                    new_dg1.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass, "some dataOfExpiry".getBytes("UTF-16LE"));
 
-                    // Добавление фото
+                    // Типа получение фото
                     FileInputStream fis = null;
                     try {
                         fis = new FileInputStream(Environment.getExternalStorageDirectory().
@@ -149,11 +150,12 @@ public class MenuActivity extends AppCompatActivity {
                     }
                     BufferedInputStream bis = new BufferedInputStream(fis);
                     Bitmap img = BitmapFactory.decodeStream(bis);
-
-                    // Вот мне типа пришла битовая карта в байтах
+                    // Получвем от пк битовую строку с фото, по идее на пк делается bitmap и переводится в байты и отправляется
                     byte[] face = getBytes(img);
-                    new_dg1.headshot = myCrypto.encrypt(pass.getBytes("UTF-16LE"), getBytes(img)).getBytes();
-
+                    byte[] encryptedFace = myCrypto.encrypt2(pass, face);
+                    FileOutputStream localFile = new FileOutputStream(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/Download/" + "faceshot.jpg");
+                    localFile.write(encryptedFace);
+                    localFile.close();
 
                     dg1TableDao.insert(new_dg1);
                 } catch (Exception e) {
