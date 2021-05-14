@@ -148,4 +148,32 @@ public class MyCrypto {
 
         return decodedText;
     }
+
+    /*----Перевод байтов хеша в строку----*/
+    private static String bytesToHexString(byte[] bytes) {
+        // http://stackoverflow.com/questions/332079
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
+
+    /*----Хеш алгоритм SHA256----*/
+    public String sha256(byte[] bytes) {
+        // Генерируем хеш
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            digest.update(bytes);
+            return bytesToHexString(digest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

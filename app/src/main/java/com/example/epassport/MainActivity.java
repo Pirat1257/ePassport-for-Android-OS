@@ -13,9 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class MainActivity extends AppCompatActivity {
 
     private Button confirmPassButton;
@@ -23,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private AppDatabase db;
     private PassTableDao passTableDao;
     private String passHash = "";
+    private MyCrypto myCrypto;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 // Считываем пароль
                 String password = passEditText.getText().toString();
                 // Генерируем хеш
-                String dummy_hash = get_hash(password);
+                String dummy_hash = myCrypto.sha256(password.getBytes());
                 // Хеш отсутствует, значит первый запуск
                 if (passHash.isEmpty()) {
                     finalPt_head.pass_hash = dummy_hash;
@@ -98,33 +96,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    // Utility function
-    private static String bytesToHexString(byte[] bytes) {
-        // http://stackoverflow.com/questions/332079
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                sb.append('0');
-            }
-            sb.append(hex);
-        }
-        return sb.toString();
-    }
-
-    // Вычисление хеша
-    private String get_hash(String text) {
-        // Генерируем хеш
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-            digest.update(text.getBytes());
-            return bytesToHexString(digest.digest());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
