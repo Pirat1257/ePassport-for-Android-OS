@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 public class DG1Table {
     @PrimaryKey
     @NonNull
-    int id;
+    String id;
     // Document Details
     String documentType;
     String issuingState;
@@ -26,7 +26,11 @@ public class DG1Table {
     String dateOfExpiryOrValidUntilDate;
     String checkDigit_DOE_VUD;
     String CompositeCheckDigit;
-    // Encoded Headshot
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    byte[] headshot;
+    // Encoded faceshot hash
+    String faceshotHash;
+    // Signs
+    String sign1;
+    String sign2;
+    // Chip id
+    String chipId;
 }

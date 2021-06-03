@@ -20,4 +20,6 @@
     <string name="given_names">Given names</string>
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
+    <string name="enter_reader_s_port">Enter reader\'s port</string>
+    <string name="check">CHECK</string>
 </resources>

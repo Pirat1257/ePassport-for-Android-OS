@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.406" />
 
     <Button
         android:id="@+id/confirm_ip_button"
@@ -29,7 +29,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/port_editText"
+        app:layout_constraintVertical_bias="0.17" />
+
+    <EditText
+        android:id="@+id/port_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="@string/enter_reader_s_port"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ip_editText"
-        app:layout_constraintVertical_bias="0.092" />
+        android:autofillHints="" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

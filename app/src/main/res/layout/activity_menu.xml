@@ -189,6 +189,18 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/checkbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/check" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
             android:id="@+id/chPassButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

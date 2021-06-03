@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         db = App.getInstance().getDatabase();
         passTableDao = db.passTableDao();
         PassTable pt_head = passTableDao.selectById(0);
+        myCrypto = new MyCrypto();
         // Если элемента не существует, значит и базы нет и вообще это первый запуск
         if (pt_head == null) {
             pt_head = new PassTable();

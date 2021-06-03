@@ -120,7 +120,7 @@ public class MyCrypto {
         return new String(decrypted, "UTF-16LE");
     }
 
-    /*----Вторая версия шифрования (подходит для картинок)----*/
+    /*--------Вторая версия шифрования (подходит для картинок)-------*/
     public static byte[] encrypt2(String key, byte[] clear) throws Exception
     {
         MessageDigest md = MessageDigest.getInstance("md5");
@@ -135,7 +135,7 @@ public class MyCrypto {
         return encodedText;
     }
 
-    /*----Вторая версия расшифрования (подходит для картинок)----*/
+    /*--------Вторая версия расшифрования (подходит для картинок)--------*/
     public static byte[] decrypt2(String key, byte[] encrypted) throws Exception
     {
         MessageDigest md = MessageDigest.getInstance("md5");
@@ -149,7 +149,7 @@ public class MyCrypto {
         return decodedText;
     }
 
-    /*----Перевод байтов хеша в строку----*/
+    /*--------Перевод байтов хеша в строку--------*/
     private static String bytesToHexString(byte[] bytes) {
         // http://stackoverflow.com/questions/332079
         StringBuffer sb = new StringBuffer();
@@ -163,7 +163,7 @@ public class MyCrypto {
         return sb.toString();
     }
 
-    /*----Хеш алгоритм SHA256----*/
+    /*--------Хеш алгоритм SHA256--------*/
     public String sha256(byte[] bytes) {
         // Генерируем хеш
         MessageDigest digest = null;
