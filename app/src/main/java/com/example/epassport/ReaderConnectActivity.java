@@ -30,7 +30,7 @@ public class ReaderConnectActivity extends AppCompatActivity {
     private int port = 8060;
     private static Socket socket;
     private String sessionKey = null;
-    private String public_key_str = null;
+    private String publicKey = null;
     private MyCrypto myCrypto;
 
     @Override
@@ -82,20 +82,21 @@ public class ReaderConnectActivity extends AppCompatActivity {
                     int len = is.available();
                     if (len > 0) {
                         byte message[] = new byte[len];
-                        for (int i = 0; i < len; i++) {
-                            message[i] = din.readByte();
-                        }
-                        if (what == 0) { // Получение публичного ключа
+                        is.read(message);
+                        // 0 - Получение публичного ключа
+                        if (what == 0) {
                             // Переводим полученный открытый ключ в строку
-                            public_key_str = new String(message, "UTF_8");
+                            publicKey = new String(message, "UTF_8");
                             // Шифруем сенсовый ключ открытым ключем
-                            String encrypted_sessionKey =  myCrypto.encryptByPublicKey(public_key_str, sessionKey);
+                            byte encSessionKey[]  =  myCrypto.encryptRSA(publicKey, sessionKey);
                             // Отправка зашифрованного сессионного ключа
-                            os.write(encrypted_sessionKey.getBytes());
+                            os.write(encSessionKey);
                             what++;
                         }
-                        else if (what == 1) { // Получение зашифрованного подтверждения - временное, для проверки корректности работы
-                            String answer = new String(message, "UTF_8");
+                        // 1 - Получение зашифрованного подтверждения
+                        else if (what == 1) {
+                            byte[] answerBytes = myCrypto.decryptAES(sessionKey, message);
+                            String answer = new String(answerBytes, "UTF_8");
 
                             // Если пришел ok, то есть контакт
                             if (answer.equals("ok")) {
@@ -105,9 +106,7 @@ public class ReaderConnectActivity extends AppCompatActivity {
                                 intent.putExtra("pass", arguments.get("pass").toString());
                                 intent.putExtra("ip", ip); // Не удастся передать Socket
                                 intent.putExtra("port", portString);
-                                intent.putExtra("Key", sessionKey);
-                                //App.getInstance().setSocket(socket);
-                                //socket.setKeepAlive(true);
+                                intent.putExtra("sessionKey", sessionKey);
                                 socket.close();
                                 startActivity(intent);
                                 finish();
@@ -124,7 +123,7 @@ public class ReaderConnectActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return "No one answered";
+            return "Connection closed";
         }
 
         @Override
