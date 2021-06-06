@@ -20,3 +20,4 @@
 - https://metanit.com/java/tutorial/6.1.php;
 - https://www.youtube.com/watch?v=X7T0g5kBYJk;
 - https://www.youtube.com/watch?v=LWFSGs4CG6I;
+- https://stackoverflow.com/questions/29013414/encrypt-and-decrypt-by-aes-algorithm-in-both-python-and-android;
