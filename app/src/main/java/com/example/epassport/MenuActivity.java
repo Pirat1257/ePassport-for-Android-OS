@@ -464,6 +464,40 @@ public class MenuActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), values[0], Toast.LENGTH_LONG).show();
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            // Производим расшифрование и вывод
+            DG1Table dg1_head = dg1TableDao.selectById(0);
+            if (dg1_head != null) {
+                try {
+                    type.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentType.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    state.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    passNo.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentNumber.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    surname.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.surname.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    names.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.name.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    nation.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.nationality.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    birth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfBirth.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    sex.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.sex.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    issue.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.issuingState.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    auth.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.authority.getBytes("UTF-16LE"), Base64.DEFAULT)));
+                    expiry.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"), Base64.DEFAULT)));
+
+                    // Вывод фото
+                    Path path = Paths.get(Environment.getExternalStorageDirectory().getAbsoluteFile() +
+                            "/Download/" + "faceshot.jpg");
+                    byte[] face = Files.readAllBytes(path);
+                    Bitmap img = getImage(myCrypto.decrypt2(pass, face));
+                    faceshot.setImageBitmap(img);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(MenuActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
     }
 
     // convert from byte array to bitmap
