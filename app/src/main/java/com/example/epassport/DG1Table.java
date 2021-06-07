@@ -16,16 +16,12 @@ public class DG1Table {
     String surname;
     String name;
     String documentNumber;
-    String checkDigit_docNumber;
     String nationality;
     String dateOfBirth;
-    String checkDigit_DOB;
     String sex;
     String dateOfIssue;
     String authority;
     String dateOfExpiryOrValidUntilDate;
-    String checkDigit_DOE_VUD;
-    String CompositeCheckDigit;
     // Encoded faceshot hash
     String faceshotHash;
     // Signs
