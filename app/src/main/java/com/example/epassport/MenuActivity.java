@@ -2,6 +2,8 @@ package com.example.epassport;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -65,6 +67,8 @@ public class MenuActivity extends AppCompatActivity {
     private MyCrypto myCrypto;
     private String sessionKey;
 
+    private int REQUEST_NEW_PASS = 1;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,7 @@ public class MenuActivity extends AppCompatActivity {
         myCrypto = new MyCrypto();
         // Если базы данных не пустые, производим вывод информации
         DG1Table dg1_head = dg1TableDao.selectById(0);
+
         if (dg1_head != null) {
             try {
                 type.setText(myCrypto.decrypt(pass, Base64.decode(dg1_head.documentType.getBytes("UTF-16LE"), Base64.DEFAULT)));
@@ -129,9 +134,9 @@ public class MenuActivity extends AppCompatActivity {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadTask dt = new DownloadTask();
-                dt.execute();
-                //hardcodedDownload();
+                //DownloadTask dt = new DownloadTask();
+                //dt.execute();
+                hardcodedDownload();
             }
         });
 
@@ -139,9 +144,9 @@ public class MenuActivity extends AppCompatActivity {
         chPassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(MenuActivity.this, ChangePassActivity.class);
-                //intent.putExtra("pass", pass);
-                //startActivity(intent);
+                Intent intent = new Intent(MenuActivity.this, ChangePassActivity.class);
+                intent.putExtra("pass", pass);
+                startActivityForResult(intent, REQUEST_NEW_PASS);
 
             }
         });
@@ -155,6 +160,8 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     void hardcodedDownload() {
@@ -194,8 +201,15 @@ public class MenuActivity extends AppCompatActivity {
                 new_dg1.faceshotHash = myCrypto.encrypt(pass, photoHash.getBytes("UTF-16LE"));
                 new_dg1.chipId = myCrypto.encrypt(pass, "12345".getBytes("UTF-16LE"));
                 // Подписи
-                new_dg1.sign1 = myCrypto.encrypt(pass, "sign1".getBytes("UTF-16LE"));
-                new_dg1.sign2 = myCrypto.encrypt(pass, "sign2".getBytes("UTF-16LE"));
+
+                String sign1 = "P" + "RUS" + "123456789" + "IVANOV" + "MIKHAIL" +
+                        "RUSSIAN FEDERATION" + "13.01.1998" + "M" + "MVD 12345" +
+                        "08.07.2028";
+                sign1 = myCrypto.sha256(sign1.getBytes());
+                String sign2 = myCrypto.sha256(sign1.getBytes());
+
+                new_dg1.sign1 = myCrypto.encrypt(pass, sign1.getBytes("UTF-16LE"));
+                new_dg1.sign2 = myCrypto.encrypt(pass, sign2.getBytes("UTF-16LE"));
                 dg1TableDao.insert(new_dg1);
                 Toast.makeText(MenuActivity.this, "Downloaded", Toast.LENGTH_LONG).show();
 
@@ -425,6 +439,9 @@ public class MenuActivity extends AppCompatActivity {
                                 dg1_head.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass, dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"));
                                 dg1_head.sign1 = myCrypto.encrypt(pass, sign1.getBytes("UTF-16LE"));
                                 dg1_head.sign2 = myCrypto.encrypt(pass, sign2.getBytes("UTF-16LE"));
+
+                                dg1_head.faceshotHash = myCrypto.encrypt(pass, newHash.getBytes("UTF-16LE"));
+
                                 dg1TableDao.update(dg1_head);
                             }
                             else {
@@ -443,6 +460,9 @@ public class MenuActivity extends AppCompatActivity {
                                 new_dg1.dateOfExpiryOrValidUntilDate = myCrypto.encrypt(pass, dateOfExpiryOrValidUntilDate.getBytes("UTF-16LE"));
                                 new_dg1.sign1 = myCrypto.encrypt(pass, sign1.getBytes("UTF-16LE"));
                                 new_dg1.sign2 = myCrypto.encrypt(pass, sign2.getBytes("UTF-16LE"));
+
+                                new_dg1.faceshotHash = myCrypto.encrypt(pass, newHash.getBytes("UTF-16LE"));
+
                                 dg1TableDao.insert(new_dg1);
                             }
                             onProgressUpdate("New Passport downloaded");
@@ -503,5 +523,18 @@ public class MenuActivity extends AppCompatActivity {
     // convert from byte array to bitmap
     public Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // В случае изменения пароля
+        if (requestCode == REQUEST_NEW_PASS) {
+            if (resultCode == RESULT_OK) {
+                pass = data.getStringExtra("new_pass");
+                // update_sources();
+                Toast.makeText(MenuActivity.this, "Password updated", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
